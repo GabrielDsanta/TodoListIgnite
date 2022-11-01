@@ -1,0 +1,10 @@
+
+
+.HeaderStyles{
+    background-color: #0D0D0D;
+    height: 12.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .75rem;
+}

@@ -1,0 +1,38 @@
+
+.main{
+    margin-top: calc(0px - 1.5rem - 6px);
+    text-align: center;
+}
+
+form{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4rem;
+}
+
+form input{
+    background-color: #262626;
+    outline: none;
+    border: solid 1px #0D0D0D;
+    border-radius: 8px;
+    padding: 1rem;
+    width: 39.875rem;
+    color: #F2F2F2;
+    margin-right: .5rem ;
+}
+
+form button{
+    background-color: #1E6F9F;
+    color: #F2F2F2;
+    padding: 1rem;
+    width: 5.625rem;
+    height: 3.25rem;
+    border: 0;
+    border-radius: 8px;
+}
+
+.PlusIcon{
+    margin-left: .2rem;
+    margin-bottom: -3px;
+}
