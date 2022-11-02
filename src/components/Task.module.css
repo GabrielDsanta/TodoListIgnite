@@ -1,0 +1,39 @@
+
+
+.Task{
+    background-color: #262626;
+    padding: 1.5rem 1.2rem;
+    display: flex;
+    width: 46rem;
+    text-align: left;
+    border-radius: 8px;
+    border: solid 1px #333333;
+}
+
+.DoneButton{
+    border: solid 2px #4EA8DE;
+    background-color: transparent;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    margin-right: 1rem;
+    margin-top: 3px;
+}
+
+.DeleteTaskButton{
+    background-color: transparent;
+    border: 0;
+    color: #808080;
+    cursor: pointer;
+    margin-bottom: 5px;
+    transition: .2s;
+}
+
+.DeleteTaskButton:hover{
+    color: #E25858;
+}
+
+p{
+    font-size: 0.875rem;
+}
