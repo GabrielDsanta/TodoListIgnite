@@ -1,6 +1,6 @@
 //Default Imports
 import { useState } from 'react'
-import { MouseEvent, ChangeEvent } from 'react'
+import { FormEvent, ChangeEvent, MouseEvent } from 'react'
 
 //Styles Imports
 import styles from './App.module.css'
@@ -11,31 +11,33 @@ import { Task } from './components/Task';
 import { TaskInterface } from './components/Task'
 import { TasksList } from "./main"
 
-export function App({ id, content}: TaskInterface) {
+export function App({ id, content }: TaskInterface) {
 
   // States
   const [ Tasks, setTasks ] = useState(0, )
+
   const [ Comment, setComment ] = useState('', )
+
+  const [newCommentText, setNewCommentText] = useState('', )
 
 
   // Functions
-  function AddTask(event: MouseEvent<HTMLButtonElement>){
+  function HandleAddText(event: ChangeEvent<HTMLInputElement>){
+    setNewCommentText(event.target.value) 
+    setComment(event.target.value)
+  }
+
+  function AddTask(event: FormEvent){
     event.preventDefault()
 
     setTasks((value) => {
       return value + 1
     })
 
-    setComment(Comment)
     console.log(TasksList)
     TasksList.push({id: Tasks, content: Comment})
-  }
-
-  function NewCommentChange(event: ChangeEvent<HTMLInputElement>){
-    event.target.setCustomValidity('')
-    setComment(event.target.value)
-    {[...Comment, setComment(event.target.value)]}
-    console.log(Comment)
+    setNewCommentText('')
+    focus()
   }
 
   // Content On Screen
@@ -43,20 +45,17 @@ export function App({ id, content}: TaskInterface) {
     <main className={styles.main}>
 
       
-      <form>
-        <input onChange={NewCommentChange} placeholder='Adicione uma nova tarefa' type="text" />
+      <form onSubmit={AddTask}>
+        <input value={newCommentText} onChange={HandleAddText} placeholder='Adicione uma nova tarefa' type="text" />
         <div>
-          <button onClick={AddTask} type='submit'>
+          <button type='submit'>
             <span>Criar</span>
             <PlusCircle className={styles.PlusIcon} size={16} />
           </button>
         </div>
       </form>
-      
-      
-      <section>
 
-        <div className={styles.TaskInfos}>
+      <div className={styles.TaskInfos}>
           <div className={styles.TaskToDo}>
             <span>
               Tarefas Criadas
@@ -72,9 +71,12 @@ export function App({ id, content}: TaskInterface) {
 
             <span className={styles.NumberCompletedTasks}>0</span>
           </div>
-        </div>
+      </div>
+      
+      <section>
 
-        <div className={styles.Tasks}>
+        {TasksList.length == 0  && (
+          <div className={styles.Tasks}>
           <img src={ClipBoardLogo} alt="" />
 
           <div>
@@ -83,12 +85,13 @@ export function App({ id, content}: TaskInterface) {
               Crie tarefas e organize seus itens a fazer
             </p>
           </div>
-      </div>
+        </div>
+        )}
       
       </section>
 
-      {TasksList.map(() => {
-          return <Task key={id} content={content} />
+      {TasksList.map((task) => {
+          return <Task key={task.id} content={task.content} />
       })}
     </main>
   )

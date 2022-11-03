@@ -45,7 +45,8 @@ form button{
 .TaskInfos{
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 28rem;
+    margin-bottom: 4rem;
 }
 
 .TaskToDo:first-child{

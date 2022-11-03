@@ -11,8 +11,15 @@ export interface TaskInterface{
 export function Task({ id, content}: TaskInterface){
     return(
         <div className={styles.Task}>
-            <button className={styles.DoneButton}></button>
-            <p>{content}</p>
+            <div className={styles.DivButtonContent}>
+                <div>
+                    <button className={styles.DoneButton}></button>
+                </div>
+                <div className={styles.ButtonContent}>
+                    <p>{content}</p>
+                </div>
+            </div>
+
             <button className={styles.DeleteTaskButton}> <Trash size={20} /></button>
         </div>
     )

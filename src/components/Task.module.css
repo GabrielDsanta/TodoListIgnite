@@ -8,6 +8,9 @@
     text-align: left;
     border-radius: 8px;
     border: solid 1px #333333;
+    margin-bottom: 1rem;
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
 .DoneButton{
@@ -36,4 +39,12 @@
 
 p{
     font-size: 0.875rem;
+}
+
+.ButtonContent{
+    word-break: break-all;
+}
+
+.DivButtonContent{
+    display: flex;
 }
