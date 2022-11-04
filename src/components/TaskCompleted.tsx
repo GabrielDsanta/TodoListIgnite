@@ -1,16 +1,10 @@
 
 
-import { Trash } from "phosphor-react"
-import styles from './Task.module.css'
+import { Trash, Check } from "phosphor-react"
+import { TaskInterface } from "./Task"
+import styles from './TaskCompleted.module.css'
 
-export interface TaskInterface{
-    id?: number,
-    content: string,
-    onDeleteTask: (content: string) => void,
-    onCompleteTask: (content: string) => void
-}
-
-export function Task({ id, content, onDeleteTask, onCompleteTask}: TaskInterface){
+export function TaskCompleted({ id, content, onDeleteTask, onCompleteTask}: TaskInterface){
     function handleDeleteTask(){
         onDeleteTask(content)
     }
@@ -18,15 +12,14 @@ export function Task({ id, content, onDeleteTask, onCompleteTask}: TaskInterface
     function handleCompleteTask(){
         onCompleteTask(content)
     }
-
     return(
         <div className={styles.Task}>
             <div className={styles.DivButtonContent}>
                 <div>
-                    <button onClick={handleCompleteTask} className={styles.DoneButton}></button>
+                    <Check onClick={handleCompleteTask} className={styles.DoneButton} />
                 </div>
                 <div className={styles.ButtonContent}>
-                    <p>{content}</p>
+                    <p className={styles.ContentCompleted}>{content}</p>
                 </div>
             </div>
 

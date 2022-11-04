@@ -1,5 +1,5 @@
 //Default Imports
-import { useState } from 'react'
+import { MouseEvent, useState } from 'react'
 import { FormEvent, ChangeEvent } from 'react'
 
 //Styles Imports
@@ -9,14 +9,16 @@ import ClipBoardLogo from './assets/Clipboard.svg'
 
 import { Task } from './components/Task';
 import { TaskInterface } from './components/Task'
-import { TasksList } from "./main"
+import { TaskCompleted } from './components/TaskCompleted';
 
-export function App({ id, content }: TaskInterface) {
+export function App({ id, content, onDeleteTask, onCompleteTask}: TaskInterface) {
 
   // States
   const [ TaskID, setTaskID ] = useState([0], )
 
-  const [ ListaDeTarefas, setListaDeTarefas ] = useState([{id, content}], )
+  const [ ListaDeTarefas, setListaDeTarefas ] = useState([], )
+
+  const [ TarefasConcluidas, setTarefasConcluidas] = useState([],)
 
   const [ Comments, setComments ] = useState(['',], )
 
@@ -29,19 +31,39 @@ export function App({ id, content }: TaskInterface) {
 
   function AddTask(event: FormEvent){
     event.preventDefault()
+    const inputText = event.target.TextValue.value
 
-    setTaskID([...TaskID, TaskID.length + 1])
-    setComments([...Comments, event.target.TextValue.value])
-    setListaDeTarefas([...ListaDeTarefas, {id: TaskID.length + 1, content: event.target.TextValue.value}])
+    setTaskID([...TaskID, ListaDeTarefas.length + 1])
+    setComments([...Comments, inputText])
+    setListaDeTarefas([...ListaDeTarefas, {id: ListaDeTarefas.length, content: inputText}])
+    event.target.TextValue.value = ''
+
   }
 
-  // function DeleteTask(id: number){
-  //   const TaskToBeDeleted = TasksList.map((TaskDelete) => {
-  //     return id == TaskDelete.id
-  //   })
+  function DeleteTask(content: string){
+    const taskToBeDeleted = ListaDeTarefas.filter((taskDelete: TaskInterface) => {
+      return content !== taskDelete.content
+    })
 
-  //   setTasks(TaskToBeDeleted)
-  // }
+    setListaDeTarefas(taskToBeDeleted)
+  }
+
+  function DeleteCompletedTask(content: string){
+    const taskToBeDeleted = ListaDeTarefas.filter((taskDelete: TaskInterface) => {
+      return content !== taskDelete.content
+    })
+
+    setTarefasConcluidas(taskToBeDeleted)
+  }
+
+  function CompleteTask(content: string){
+    const taskCompleted = ListaDeTarefas.filter((taskCompleted: TaskInterface) => {
+      return content == taskCompleted.content
+    })
+    DeleteTask(content)
+    setTarefasConcluidas([...TarefasConcluidas, {id: TarefasConcluidas.length, content: content}])
+    console.log(TarefasConcluidas.length)
+  }
 
 
   // Content On Screen
@@ -65,7 +87,7 @@ export function App({ id, content }: TaskInterface) {
               Tarefas Criadas
             </span>
 
-            <span className={styles.NumberCreatesTasks}>{TaskID.length - 1}</span>
+            <span className={styles.NumberCreatesTasks}>{ListaDeTarefas.length}</span>
           </div>
 
           <div className={styles.TaskDone}>
@@ -73,13 +95,13 @@ export function App({ id, content }: TaskInterface) {
               Concluidas
             </span>
 
-            <span className={styles.NumberCompletedTasks}>0</span>
+            <span className={styles.NumberCompletedTasks}>{TarefasConcluidas.length} de {ListaDeTarefas.length}</span>
           </div>
       </div>
       
       <section>
 
-        {ListaDeTarefas.length == 0  && (
+        {ListaDeTarefas.length >= 1 || TarefasConcluidas.length == 0 &&(
           <div className={styles.Tasks}>
           <img src={ClipBoardLogo} alt="" />
 
@@ -94,10 +116,16 @@ export function App({ id, content }: TaskInterface) {
       
       </section>
 
-      {ListaDeTarefas.map((task) => {
-          return <Task key={task.id} content={task.content} />
+      {ListaDeTarefas.map((task: TaskInterface) => {
+          return <Task onCompleteTask={CompleteTask} onDeleteTask={DeleteTask} key={task.id} content={task.content} />
         })
       }
+
+      {TarefasConcluidas.length > 0 && (
+        TarefasConcluidas.map((task: TaskInterface) => {
+          return <TaskCompleted onCompleteTask={CompleteTask} onDeleteTask={DeleteCompletedTask} key={task.id} content={task.content} />
+        })
+      )}
     </main>
   )
 }
