@@ -1,6 +1,6 @@
 //Default Imports
 import { useState } from 'react'
-import { FormEvent, ChangeEvent, MouseEvent } from 'react'
+import { FormEvent, ChangeEvent } from 'react'
 
 //Styles Imports
 import styles from './App.module.css'
@@ -14,31 +14,35 @@ import { TasksList } from "./main"
 export function App({ id, content }: TaskInterface) {
 
   // States
-  const [ Tasks, setTasks ] = useState(0, )
+  const [ TaskID, setTaskID ] = useState([0], )
 
-  const [ Comment, setComment ] = useState('', )
+  const [ ListaDeTarefas, setListaDeTarefas ] = useState([{id, content}], )
 
-  const [newCommentText, setNewCommentText] = useState('', )
+  const [ Comments, setComments ] = useState(['',], )
+
 
 
   // Functions
   function HandleAddText(event: ChangeEvent<HTMLInputElement>){
-    setNewCommentText(event.target.value) 
-    setComment(event.target.value)
+    setComments([...Comments, event.target.value])
   }
 
   function AddTask(event: FormEvent){
     event.preventDefault()
 
-    setTasks((value) => {
-      return value + 1
-    })
-
-    console.log(TasksList)
-    TasksList.push({id: Tasks, content: Comment})
-    setNewCommentText('')
-    focus()
+    setTaskID([...TaskID, TaskID.length + 1])
+    setComments([...Comments, event.target.TextValue.value])
+    setListaDeTarefas([...ListaDeTarefas, {id: TaskID.length + 1, content: event.target.TextValue.value}])
   }
+
+  // function DeleteTask(id: number){
+  //   const TaskToBeDeleted = TasksList.map((TaskDelete) => {
+  //     return id == TaskDelete.id
+  //   })
+
+  //   setTasks(TaskToBeDeleted)
+  // }
+
 
   // Content On Screen
   return(
@@ -46,7 +50,7 @@ export function App({ id, content }: TaskInterface) {
 
       
       <form onSubmit={AddTask}>
-        <input value={newCommentText} onChange={HandleAddText} placeholder='Adicione uma nova tarefa' type="text" />
+        <input name='TextValue' onChange={HandleAddText} autoFocus placeholder='Adicione uma nova tarefa' type="text" />
         <div>
           <button type='submit'>
             <span>Criar</span>
@@ -61,7 +65,7 @@ export function App({ id, content }: TaskInterface) {
               Tarefas Criadas
             </span>
 
-            <span className={styles.NumberCreatesTasks}>{Tasks}</span>
+            <span className={styles.NumberCreatesTasks}>{TaskID.length - 1}</span>
           </div>
 
           <div className={styles.TaskDone}>
@@ -75,7 +79,7 @@ export function App({ id, content }: TaskInterface) {
       
       <section>
 
-        {TasksList.length == 0  && (
+        {ListaDeTarefas.length == 0  && (
           <div className={styles.Tasks}>
           <img src={ClipBoardLogo} alt="" />
 
@@ -90,9 +94,10 @@ export function App({ id, content }: TaskInterface) {
       
       </section>
 
-      {TasksList.map((task) => {
+      {ListaDeTarefas.map((task) => {
           return <Task key={task.id} content={task.content} />
-      })}
+        })
+      }
     </main>
   )
 }

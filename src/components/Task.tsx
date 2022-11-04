@@ -5,10 +5,13 @@ import styles from './Task.module.css'
 
 export interface TaskInterface{
     id?: number,
-    content?: string
+    content?: string,
 }
 
-export function Task({ id, content}: TaskInterface){
+export function Task({ id, content }: TaskInterface){
+    function handleDeleteTask(): void{
+    }
+
     return(
         <div className={styles.Task}>
             <div className={styles.DivButtonContent}>
@@ -20,7 +23,7 @@ export function Task({ id, content}: TaskInterface){
                 </div>
             </div>
 
-            <button className={styles.DeleteTaskButton}> <Trash size={20} /></button>
+            <button onClick={handleDeleteTask} className={styles.DeleteTaskButton}> <Trash size={20} /></button>
         </div>
     )
 }
