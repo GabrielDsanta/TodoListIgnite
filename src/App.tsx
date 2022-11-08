@@ -1,6 +1,6 @@
 //Default Imports
-import { useState } from 'react'
-import { FormEvent, ChangeEvent, MouseEvent } from 'react'
+import { MouseEvent, useState } from 'react'
+import { FormEvent, ChangeEvent } from 'react'
 
 //Styles Imports
 import styles from './App.module.css'
@@ -9,36 +9,77 @@ import ClipBoardLogo from './assets/Clipboard.svg'
 
 import { Task } from './components/Task';
 import { TaskInterface } from './components/Task'
-import { TasksList } from "./main"
+import { TaskCompleted } from './components/TaskCompleted';
 
-export function App({ id, content }: TaskInterface) {
+export function App({ id, content, onDeleteTask, onCompleteTask}: TaskInterface) {
 
   // States
-  const [ Tasks, setTasks ] = useState(0, )
+  const [ TaskID, setTaskID ] = useState([0], )
 
-  const [ Comment, setComment ] = useState('', )
+  const [ ListaDeTarefas, setListaDeTarefas ] = useState([], )
 
-  const [newCommentText, setNewCommentText] = useState('', )
+  const [ TarefasConcluidas, setTarefasConcluidas] = useState([],)
+
+  const [ Comments, setComments ] = useState(['',], )
+
 
 
   // Functions
   function HandleAddText(event: ChangeEvent<HTMLInputElement>){
-    setNewCommentText(event.target.value) 
-    setComment(event.target.value)
+    setComments([...Comments, event.target.value])
   }
 
   function AddTask(event: FormEvent){
     event.preventDefault()
+    const inputText = event.target.TextValue.value
 
-    setTasks((value) => {
-      return value + 1
+    setTaskID([...TaskID, ListaDeTarefas.length + 1])
+    setComments([...Comments, inputText])
+    setListaDeTarefas([...ListaDeTarefas, {id: ListaDeTarefas.length, content: inputText}])
+    event.target.TextValue.value = ''
+
+  }
+
+  function DeleteTask(content: string){
+    const taskToBeDeleted = ListaDeTarefas.filter((taskDelete: TaskInterface) => {
+      return content !== taskDelete.content
     })
 
-    console.log(TasksList)
-    TasksList.push({id: Tasks, content: Comment})
-    setNewCommentText('')
-    focus()
+    setListaDeTarefas(taskToBeDeleted)
   }
+
+  function DeleteCompletedTask(content: string){
+    const taskToBeDeleted = TarefasConcluidas.filter((taskDelete: TaskInterface) => {
+      return content !== taskDelete.content
+    })
+
+    setTarefasConcluidas(taskToBeDeleted)
+  }
+
+  function CompleteTask(content: string){
+    const taskCompleted = ListaDeTarefas.filter((taskCompleted: TaskInterface) => {
+      return content == taskCompleted.content
+    })
+
+    DeleteTask(content)
+    setTarefasConcluidas([...TarefasConcluidas, {id: TarefasConcluidas.length, content: content}])
+  }
+
+  function UncompleteTask(content: string){
+    const taskUncompleted = TarefasConcluidas.filter((taskUnCompleted: TaskInterface) => {
+      return content !== taskUnCompleted.content
+    })
+
+    DeleteTask(content)
+    setListaDeTarefas([...ListaDeTarefas, {id: TarefasConcluidas.length + ListaDeTarefas.length * 2, content: content}])
+
+    const taskToBeDeleted = TarefasConcluidas.filter((taskDelete: TaskInterface) => {
+      return content !== taskDelete.content
+    })
+
+    setTarefasConcluidas(taskToBeDeleted)
+  }
+
 
   // Content On Screen
   return(
@@ -46,7 +87,7 @@ export function App({ id, content }: TaskInterface) {
 
       
       <form onSubmit={AddTask}>
-        <input value={newCommentText} onChange={HandleAddText} placeholder='Adicione uma nova tarefa' type="text" />
+        <input name='TextValue' onChange={HandleAddText} autoFocus placeholder='Adicione uma nova tarefa' type="text" />
         <div>
           <button type='submit'>
             <span>Criar</span>
@@ -61,7 +102,7 @@ export function App({ id, content }: TaskInterface) {
               Tarefas Criadas
             </span>
 
-            <span className={styles.NumberCreatesTasks}>{Tasks}</span>
+            <span className={styles.NumberCreatesTasks}>{ListaDeTarefas.length}</span>
           </div>
 
           <div className={styles.TaskDone}>
@@ -69,13 +110,13 @@ export function App({ id, content }: TaskInterface) {
               Concluidas
             </span>
 
-            <span className={styles.NumberCompletedTasks}>0</span>
+            <span className={styles.NumberCompletedTasks}>{TarefasConcluidas.length} de {ListaDeTarefas.length + TarefasConcluidas.length}</span>
           </div>
       </div>
       
       <section>
 
-        {TasksList.length == 0  && (
+        {ListaDeTarefas.length >= 1 || TarefasConcluidas.length == 0 &&(
           <div className={styles.Tasks}>
           <img src={ClipBoardLogo} alt="" />
 
@@ -90,9 +131,16 @@ export function App({ id, content }: TaskInterface) {
       
       </section>
 
-      {TasksList.map((task) => {
-          return <Task key={task.id} content={task.content} />
-      })}
+      {ListaDeTarefas.map((task: TaskInterface) => {
+          return <Task onCompleteTask={CompleteTask} onDeleteTask={DeleteTask} key={task.id} content={task.content} />
+        })
+      }
+
+      {TarefasConcluidas.length > 0 && (
+        TarefasConcluidas.map((task: TaskInterface) => {
+          return <TaskCompleted onUncompleteTask={UncompleteTask} onCompleteTask={CompleteTask} onDeleteTask={DeleteCompletedTask} key={task.id} content={task.content} />
+        })
+      )}
     </main>
   )
 }
