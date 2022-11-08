@@ -7,7 +7,8 @@ export interface TaskInterface{
     id?: number,
     content: string,
     onDeleteTask: (content: string) => void,
-    onCompleteTask: (content: string) => void
+    onCompleteTask: (content: string) => void,
+    onUncompleteTask?: (content: string) => void,
 }
 
 export function Task({ id, content, onDeleteTask, onCompleteTask}: TaskInterface){

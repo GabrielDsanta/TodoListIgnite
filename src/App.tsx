@@ -49,7 +49,7 @@ export function App({ id, content, onDeleteTask, onCompleteTask}: TaskInterface)
   }
 
   function DeleteCompletedTask(content: string){
-    const taskToBeDeleted = ListaDeTarefas.filter((taskDelete: TaskInterface) => {
+    const taskToBeDeleted = TarefasConcluidas.filter((taskDelete: TaskInterface) => {
       return content !== taskDelete.content
     })
 
@@ -60,9 +60,24 @@ export function App({ id, content, onDeleteTask, onCompleteTask}: TaskInterface)
     const taskCompleted = ListaDeTarefas.filter((taskCompleted: TaskInterface) => {
       return content == taskCompleted.content
     })
+
     DeleteTask(content)
     setTarefasConcluidas([...TarefasConcluidas, {id: TarefasConcluidas.length, content: content}])
-    console.log(TarefasConcluidas.length)
+  }
+
+  function UncompleteTask(content: string){
+    const taskUncompleted = TarefasConcluidas.filter((taskUnCompleted: TaskInterface) => {
+      return content !== taskUnCompleted.content
+    })
+
+    DeleteTask(content)
+    setListaDeTarefas([...ListaDeTarefas, {id: TarefasConcluidas.length + ListaDeTarefas.length * 2, content: content}])
+
+    const taskToBeDeleted = TarefasConcluidas.filter((taskDelete: TaskInterface) => {
+      return content !== taskDelete.content
+    })
+
+    setTarefasConcluidas(taskToBeDeleted)
   }
 
 
@@ -95,7 +110,7 @@ export function App({ id, content, onDeleteTask, onCompleteTask}: TaskInterface)
               Concluidas
             </span>
 
-            <span className={styles.NumberCompletedTasks}>{TarefasConcluidas.length} de {ListaDeTarefas.length}</span>
+            <span className={styles.NumberCompletedTasks}>{TarefasConcluidas.length} de {ListaDeTarefas.length + TarefasConcluidas.length}</span>
           </div>
       </div>
       
@@ -123,7 +138,7 @@ export function App({ id, content, onDeleteTask, onCompleteTask}: TaskInterface)
 
       {TarefasConcluidas.length > 0 && (
         TarefasConcluidas.map((task: TaskInterface) => {
-          return <TaskCompleted onCompleteTask={CompleteTask} onDeleteTask={DeleteCompletedTask} key={task.id} content={task.content} />
+          return <TaskCompleted onUncompleteTask={UncompleteTask} onCompleteTask={CompleteTask} onDeleteTask={DeleteCompletedTask} key={task.id} content={task.content} />
         })
       )}
     </main>
